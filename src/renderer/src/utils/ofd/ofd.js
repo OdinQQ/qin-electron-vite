@@ -25,7 +25,7 @@ import {
 } from "./ofd_render";
 import { pipeline } from "./pipeline";
 import { getDocRoots, parseSingleDoc, unzipOfd } from "./ofd_parser";
-import { digestCheckProcess } from "./ses_signature_parser";
+// import { digestCheckProcess } from "./ses_signature_parser";
 import { getPageScal, setPageScal } from "./ofd_util";
 import * as JSZipUtils from "jszip-utils";
 /**
@@ -139,15 +139,15 @@ export const renderOfdByScale = function (ofd) {
   return divArray;
 };
 
-export const digestCheck = function (options) {
-  // pipeline.call(this, async () => await digestCheckProcess(options.arr))
-  //     .then(res => {
-  //         if (options.success) {
-  //             options.success(res);
-  //         }
-  //     });
-  return digestCheckProcess(options);
-};
+// export const digestCheck = function (options) {
+//   // pipeline.call(this, async () => await digestCheckProcess(options.arr))
+//   //     .then(res => {
+//   //         if (options.success) {
+//   //             options.success(res);
+//   //         }
+//   //     });
+//   return digestCheckProcess(options);
+// };
 
 export const setPageScale = function (scale) {
   setPageScal(scale);

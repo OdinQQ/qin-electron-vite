@@ -1,5 +1,5 @@
 <script setup>
-import { parseOfdDocument, renderOfd } from 'ofd.js'
+import { parseOfdDocument, renderOfd } from '../utils/ofd/ofd'
 import { ref } from 'vue'
 
 let screenWidth = document.body.clientWidth - 88
@@ -11,8 +11,9 @@ function getOfdDocumentObj(file, screenWidth) {
   parseOfdDocument({
     ofd: file,
     success(res) {
-        console.log("res", res);
       const ofdObj = res[0]
+      console.log("res", ofdObj);
+
       // 渲染OFD
       const divs = renderOfd(screenWidth, ofdObj)
       // 显示OFD渲染的内容
@@ -42,7 +43,8 @@ let content = []
 let highlights = []
 // 初始化文本
 function analyseTexts() {
-  textElements = Array.from(document.getElementsByTagName('text'))
+  textElements = Array.from(document.querySelectorAll("svg text"))
+  console.log("textElements", textElements);
   let length = 0
   textNodes = textElements.map((element) => {
     let startIdx = length,
@@ -55,6 +57,7 @@ function analyseTexts() {
     }
   })
   content = textNodes.map(({ text }) => text).join('')
+  console.log("content", content);
 }
 // 高亮
 function highlight(arr) {
