@@ -18,9 +18,12 @@
  *
  */
 
-import Hex from '@lapo/asn1js/hex'
-import Base64 from '@lapo/asn1js/base64'
-import ASN1 from '@lapo/asn1js'
+// import Hex from '@lapo/asn1js/hex'
+const Hex = import('@lapo/asn1js/hex')
+// import Base64 from '@lapo/asn1js/base64'
+const Base64 = import('@lapo/asn1js/base64')
+// import ASN1 from '@lapo/asn1js'
+const ASN1 = import('@lapo/asn1js')
 import { SES_Signature_Verify, digestByteArray } from './verify_signature_util'
 
 let reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/

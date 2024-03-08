@@ -1,8 +1,7 @@
 import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import vue from '@vitejs/plugin-vue'
-import vitePluginRequire from "vite-plugin-require"
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
+
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin()]
@@ -17,5 +16,9 @@ export default defineConfig({
       }
     },
     plugins: [vue()],
+    // @lapo/asn1js
+    optimizeDeps: {
+      exclude: ['@lapo/asn1js'],
+    },
   }
 })

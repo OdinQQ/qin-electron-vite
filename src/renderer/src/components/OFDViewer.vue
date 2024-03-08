@@ -1,18 +1,18 @@
 <script setup>
 import { parseOfdDocument, renderOfd } from '../utils/ofd/ofd'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 let screenWidth = document.body.clientWidth - 88
 // let file = require('../assets/111.ofd')
 // console.log("file", file);
 // getOfdDocumentObj(file, screenWidth)
 function getOfdDocumentObj(file, screenWidth) {
-    console.log("get", file, screenWidth);
+  console.log('get', file, screenWidth)
   parseOfdDocument({
     ofd: file,
     success(res) {
       const ofdObj = res[0]
-      console.log("res", ofdObj);
+      console.log('res', ofdObj)
 
       // 渲染OFD
       const divs = renderOfd(screenWidth, ofdObj)
@@ -20,20 +20,17 @@ function getOfdDocumentObj(file, screenWidth) {
       displayOfdDiv(divs)
       analyseTexts()
       //
-      highlight(['青团'])
+      // highlight(['青团', '语文', '数学'])
     },
     fail(error) {
       console.log('error', error)
     }
   })
 }
-
 function displayOfdDiv(divs) {
-    console.log("divs", divs);
-  let contentDiv = document.getElementById('content')
-  contentDiv.innerHTML = ''
+  contentDiv.value.innerHTML = ''
   for (const div of divs) {
-    contentDiv.appendChild(div)
+    contentDiv.value.appendChild(div)
   }
 }
 
@@ -43,8 +40,8 @@ let content = []
 let highlights = []
 // 初始化文本
 function analyseTexts() {
-  textElements = Array.from(document.querySelectorAll("svg text"))
-  console.log("textElements", textElements);
+  textElements = Array.from(document.querySelectorAll('svg text'))
+  console.log('textElements', textElements)
   let length = 0
   textNodes = textElements.map((element) => {
     let startIdx = length,
@@ -57,7 +54,7 @@ function analyseTexts() {
     }
   })
   content = textNodes.map(({ text }) => text).join('')
-  console.log("content", content);
+  console.log('content', content)
 }
 // 高亮
 function highlight(arr) {
@@ -71,7 +68,7 @@ function highlight(arr) {
 // 获取正则匹配结果
 function getMatchList(content, keyword) {
   const characters = [...'[]()?.+*^${}:'].reduce((r, c) => ((r[c] = true), r), {})
-  console.log(characters);
+  console.log(characters)
   keyword = keyword
     .split('')
     .map((s) => (characters[s] ? `\\${s}` : s))
@@ -115,31 +112,57 @@ function uploadFile() {
   file = null
 }
 function fileChanged(e) {
-    console.log("file", e);
+  console.log('file', e)
   file = e.target.files[0]
-  console.log("file", file);
+  console.log('file', file)
   getOfdDocumentObj(file, screenWidth)
-//   fileRef.value.file.value = null
+  //   fileRef.value.file.value = null
+}
+
+const contentDiv = ref(null)
+onMounted(() => {
+  contentDiv.value.addEventListener('scroll', scroll)
+  console.log('contentDiv.value', contentDiv.value)
+})
+function scroll() {
+  let scrolled = contentDiv.value.firstElementChild?.getBoundingClientRect()?.top - 60
+  let top = 0
+  let index = 0
+  for (let i = 0; i < contentDiv.value.childElementCount; i++) {
+    top +=
+      Math.abs(contentDiv.value.children.item(i)?.style.height.replace('px', '')) +
+      Math.abs(contentDiv.value.children.item(i)?.style.marginBottom.replace('px', ''))
+    if (Math.abs(scrolled) < top) {
+      index = i
+      break
+    }
+  }
+  // this.pageIndex = index + 1;
+}
+const highlightTexts = ref('')
+function doHightlight() {
+  const arr = highlightTexts.value.split('|')
+  highlight(arr)
 }
 </script>
 <template>
   <div>
     <div class="upload-icon" @click="uploadFile">
       <div class="upload-icon">打开OFD</div>
-      <font-awesome-icon icon="cloud-upload-alt" />
       <input type="file" ref="fileRef" class="hidden" accept=".ofd" @change="fileChanged" />
+    </div>
+    <div>
+      <input type="text" v-model="highlightTexts" @keyup.enter="doHightlight" />
     </div>
   </div>
   <div class="box">
-    <div id="content"></div>
+    <div id="content" ref="contentDiv" @mousewheel="scroll"></div>
   </div>
 </template>
 <style scoped>
 ::highlight(search-results) {
-  background-color: #f06;
-  color: white;
+  background-color: #ff6666;
 }
 .box {
-    overflow: scroll;
 }
 </style>

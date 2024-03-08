@@ -25,8 +25,8 @@ import {
   getExtensionByPath,
   replaceFirstSlash,
 } from "./ofd_util";
-let parser = require("ofd-xml-parser");
-// import parser from "ofd-xml-parser"
+// let parser = import("ofd-xml-parser");
+import parser from "ofd-xml-parser"
 import { Jbig2Image } from "../jbig2/jbig2";
 import { parseSesSignature } from "./ses_signature_parser";
 
